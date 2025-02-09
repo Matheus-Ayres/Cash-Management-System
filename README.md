@@ -1,1 +1,1 @@
-# Cash-Management-System
+First 3C code academy project
