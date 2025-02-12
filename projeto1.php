@@ -16,11 +16,19 @@ function login($users)
   return false;
 }
 
+function new_user($users){
+  $new_user = readline("Username: ");
+  $new_password = readline("Password: ");
+  $users[] = ["login" => $new_user, "password" => $new_password];
+  return $users;
+}
+
 $logged = login($users);
 
 while (true) {
   if ($logged) {
     echo "Login successful!\n";
+    break;
   } else {
     $attempts = readline("Login or Password is incorrect!\n Try again - Type 1\n Register a new user - Type 2 \n");
     switch ($attempts) {
@@ -28,11 +36,12 @@ while (true) {
         $logged = login($users);
         break;
       case 2:
-        echo "register";
+        $users = new_user($users);
+        echo "Registered user, ";
+        $logged = true;
         break;
       default:
         exit();
-        break;
     }
   }
 }
