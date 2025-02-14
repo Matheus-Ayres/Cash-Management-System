@@ -1,56 +1,75 @@
 <?php
 $users = [
-  ["login" => "defaultuser", "password" => "1234", "sales_sold" => "", "date" => ""],
-  ["login" => "user2", "password" => "54321", "item_sold" => "", "date" => ""],
+  ["login" => "defaultuser", "password" => "1234"],
+  ["login" => "user2", "password" => "54321"],
 ];
 
+$sales = [];
 
-function login($users)
+function login(&$users) 
 {
   $login_input = readline("Login: ");
   $password_input = readline("Password: ");
+  
   foreach ($users as $info) {
     if ($info["login"] == $login_input && $info["password"] == $password_input) {
-      return true;
+      return $login_input;
     }
   }
   return false;
 }
 
-function new_user($users){
+function new_user(&$users)
+{
   $new_user = readline("Username: ");
   $new_password = readline("Password: ");
+  
   $users[] = ["login" => $new_user, "password" => $new_password];
-  return $users;
+  echo "User registered successfully!\n\n";
 }
 
-$logged = login($users);
+$logged_user = login($users);
 
 while (true) {
-  if ($logged) {
-    echo "Login successful!\n";
-      $choice = readline("Sale - Type 1 \n Logout - Type 2 \n");
-        switch ($choice) {
-          case 1:
+  if ($logged_user) {
+    $choice = readline("Sale - Type 1 \n Logout - Type 2 \n Log - Type 3\n");
 
-        
-          case 2:
-            $logged = false;
-            $logged = login($users);
-            break;
-        }
-  } else {
-    $attempts = readline("Login or Password is incorrect!\n Try again - Type 1\n Register a new user - Type 2 \n");
-    switch ($attempts) {
+    switch ($choice) {
       case 1:
-        $logged = login($users);
+        $product = readline("Enter product: ");
+        $sale_value = readline("Enter value: ");
+        $sales[] = ["user" => $logged_user,  "product" => $product, "sale_value" => $sale_value, "date" => date("Y-m-d H:i:s")];
+        echo "Sale recorded successfully!\n";
+        break;
+
+      case 2:
+        echo "Logging out\n";
+        $logged_user = login($users);
+        break;
+
+      case 3:
+        print_r($sales);
+        break;
+
+
+
+      default:
+        echo "Invalid option. Try again.\n";
+        break;
+    }
+  } else {
+    $attempt = readline("Login or password incorrect!\nTry again - Type 1\nRegister a new user - Type 2\n");
+
+    switch ($attempt) {
+      case 1:
+        $logged_user = login($users);
         break;
       case 2:
-        $users = new_user($users);
-        echo "Registered user! \n \n";
-        $logged = login($users);
+        new_user($users);
+        $logged_user = login($users);
         break;
       default:
+        echo "Exiting...\n";
         exit();
     }
   }
